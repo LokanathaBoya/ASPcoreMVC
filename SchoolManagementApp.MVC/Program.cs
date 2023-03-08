@@ -1,6 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using SchoolManagementApp.MVC.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the IoC container.
+//what does it means when the applicaiton starts ,grab me the connectionstring 
+var conn = builder.Configuration.GetConnectionString("StudentAdminPortalDb");
+//then use the connection string to initialize actual connection to the database that this(SchoolManagementDbContext) 
+//DbContext is a model of here(conn) is the connection string that you should use.
+builder.Services.AddDbContext<SchoolManagementDbContext>(opt => opt.UseSqlServer(conn));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
