@@ -1,3 +1,4 @@
+using Auth0.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementApp.MVC.Data;
 
@@ -9,6 +10,10 @@ var conn = builder.Configuration.GetConnectionString("StudentAdminPortalDb");
 //then use the connection string to initialize actual connection to the database that this(SchoolManagementDbContext) 
 //DbContext is a model of here(conn) is the connection string that you should use.
 builder.Services.AddDbContext<SchoolManagementDbContext>(opt => opt.UseSqlServer(conn));
+ builder.Services.AddAuth0WebAppAuthentication(options => {
+            options.Domain = builder.Configuration["Auth0:Domain"];
+            options.ClientId = builder.Configuration["Auth0:ClientId"];
+        });
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -26,6 +31,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
